@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::post('register', [UserController::class, 'register']);
+Route::post('login', [UserController::class, 'login']);
+Route::get('book', [BookController::class, 'book']);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => 'jwt.verify'], function(){
+    Route::get('bookall', [BookController::class, 'bookAuth']);
+    Route::get('user', [UserController::class, 'getAuthenticatedUser']);
 });
